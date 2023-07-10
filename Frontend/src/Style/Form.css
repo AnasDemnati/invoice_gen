@@ -1,0 +1,26 @@
+.FormBox {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 30px;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.dropzone {
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.dropzone:hover {
+    cursor: pointer;
+    background-color: #f5f5f5;
+}
+.sendButton{
+    color: white;
+}

@@ -1,0 +1,192 @@
+
+import React ,{useState} from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
+import { TextField, Button, Grid, colors ,FormHelperText} from '@mui/material';
+import Avatar from '@mui/material/Avatar';
+import Box, { BoxProps } from '@mui/material/Box';
+import './Style/Form.css'; 
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+import axios from "axios";
+import { baseURL } from './utils/constant'
+import { Request, Response } from 'express';
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#8cc641',
+    },
+    success:{
+      main:'#000'
+    },
+    neutral: {
+      main: '#fff',
+      contrastText: '#c2caec',
+    },  
+    green: {
+      main: '#000',
+      contrastText: '#000',
+    }
+  },
+});
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    neutral: Palette['primary'];
+    green: Palette['success'];
+  }
+
+  interface PaletteOptions {
+    neutral?: PaletteOptions['primary'];
+    green?: PaletteOptions['success'];
+  }
+}
+/*
+const schema = Yup.object().shape({
+  name: Yup.string().required('ce cjamps est requis'),
+  email: Yup.string().email('Format d\'e-mail invalide').required('L\'e-mail est requis'),
+  adresse: Yup.string().required('Ce champs est requis'),
+  tel: Yup.string().required('Ce champs est requis').test('tel format','veuillez verifier le numero de tel',function(value:any){
+    if(value){
+      const telRegex = /^[0-9]{5}$/;
+      return telRegex.test(value)
+    }
+  }),
+  image: Yup.mixed()
+  .required('Veuillez sélectionner une image')
+  .test('fileFormat', 'Format d\'image non pris en charge', function (value:any) {
+    if (value) {
+      const supportedFormats = ['jpg', 'jpeg', 'png'];
+      const fileExtension = value[0]?.name.split('.').pop()?.toLowerCase();
+      return supportedFormats.includes(fileExtension);
+    }
+    return true;
+  }),
+  codepostal: Yup.mixed()
+  .required('Veuillez inserer le code postal')
+  .test('codePostalFormat', 'Format de code postal non pris en charge', function (value:any) {
+    if (value) {
+      const codePostalRegex = /^[0-9]{5}$/;
+      return codePostalRegex.test(value);
+    }
+    return true;
+  })
+  
+});
+*/
+const RegisterForm = () => {
+  const [inputName,setInputName]=useState("")
+  const [inputEmail,setInputEmail]=useState("")
+  const [inputAdresse,setInputAdresse]=useState("")
+  const [inputTel,setInputTel]=useState("")
+  const [inputImage,setInputImage]=useState("")
+  const [inputCodePostal,setInputCodePostal]=useState("")
+  const [selectedImage, setSelectedImage] = useState("null");
+ /* const addCompany = (): void => {
+    axios.post(`${baseURL}/save`, {
+      name: inputName,
+      email: inputEmail,
+      adresse: inputAdresse,
+      tel: inputTel,
+      image: inputImage,
+      codepostal: inputCodePostal
+    })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  const {register,handleSubmit,formState: { errors },} = useForm({
+    resolver: yupResolver(schema),
+    mode: 'onSubmit',
+  });
+  */
+
+  const onsubmit=(data: any)=>{
+    console.log(data)
+  }
+
+
+  const handleImageChange = (event:any) => {
+    const file = event.target.files[0];
+    setSelectedImage(URL.createObjectURL(file));
+  };
+  
+  return (
+    <ThemeProvider theme={theme}>    
+    <form onSubmit={handleSubmit(onsubmit)}>
+    <Box className="FormBox" >  
+          <TextField 
+            label="Nom"
+            sx={{ m: 1, width: '100%',color: 'red'  }}
+            value={inputName}
+            onChange={(e) => setInputName(e.target.value)} 
+          />
+           {errors.inputName && (
+          <FormHelperText sx={{ color: 'red' }}>{errors.name}</FormHelperText>
+        )}
+          <TextField
+            label="Email"
+            sx={{ m: 1, width: '100%' }}
+            {...register('email')} 
+           onChange={(e) => setInputEmail(e.target.value)} 
+          />
+          {errors.email && (
+                <FormHelperText sx={{ color: 'red' }}>{errors.email.message}</FormHelperText>
+          )}
+          <TextField
+            label="Adresse"
+            sx={{ m: 1, width: '100%' }}
+            {...register('adresse')} 
+            onChange={(e) => setInputAdresse(e.target.value)} 
+          />
+           {errors.adresse && (
+                <FormHelperText sx={{ color: 'red' }}>{errors.adresse.message}</FormHelperText>
+          )} 
+          <TextField
+            label="Code Postal"
+            sx={{ m: 1, width: '100%' }}
+            {...register('codepostal')} 
+            onChange={(e) => setInputCodePostal(e.target.value)} 
+          />
+           {errors.tel && (
+                <FormHelperText sx={{ color: 'red' }}>{errors.tel.message}</FormHelperText>
+          )}    
+          <TextField
+            label="Telephone"
+            placeholder='+212_xxx_xxx_xx'
+            sx={{ m: 1, width: '100%' }}
+            {...register('tel')} 
+            onChange={(e) => setInputTel(e.target.value)} 
+          />
+           {errors.codepostal && (
+                <FormHelperText sx={{ color: 'red' }}>{errors.codepostal.message}</FormHelperText>
+          )}    
+          <Box className="dropzone">
+              <TextField 
+                type="file"
+                {...register('image')}
+                onChange={handleImageChange}
+                sx={{ m: 1, width: '100%' }}
+                />
+                {selectedImage && (
+                <Avatar
+                alt="Logo"
+                src={selectedImage}
+                sx={{ width: 250, height: 250 }}
+              />
+              )}
+              {errors.image && (
+                <FormHelperText sx={{ color: 'red' }}>{errors.image.message}</FormHelperText>
+              )}
+          </Box>      
+          <Button type='submit' variant="contained" color='primary' sx={{textTransform:'capitalize'}}>Envoyer</Button>
+    </ Box>
+    </form>
+    </ThemeProvider>
+  );
+};
+export default RegisterForm;
+

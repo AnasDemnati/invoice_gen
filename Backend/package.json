@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Server.ts",
+  "scripts": {
+    "dev": "nodemon Server.ts",
+    "start": "node Server.ts"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.3.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.13"
+  }
+}
